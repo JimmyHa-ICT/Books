@@ -5,23 +5,14 @@
 {% endblock %}
 
 {% block content %}
-    <form>
+    <form action="{{ url_for('result') }}" method="POST">
         <div class="form-section">
             <label for="search">Search</label>
             <input type="text" id="search" name="search" placeholder="Enter title, author or isbn of the book">
         </div>
-    </form>
 
-    <ul>
-        {% for book in books %}
-            <li>
-                Title: {{book.title}}
-                Author: {{book.author}}
-                ISBN: {{book.isbn}}
-                Year: {{book.year}}
-            </li>
-        {% else %}
-            There were no results match with your keywords
-        {% endfor %}
-    </ul>
+        <div class="form-section">
+            <button>Search</button>
+        </div>
+    </form>
 {% endblock %}

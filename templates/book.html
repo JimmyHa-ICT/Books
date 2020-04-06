@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    {{ book.name }}
+    {{ book.title }}
 {% endblock %}
 
 {% block content %}
@@ -9,24 +9,36 @@
         <li>Title: {{ book.title }}</li>
         <li>Author: {{ book.author }}</li>
         <li>ISBN: {{ book.isbn }}</li>
-        <li>Year:: {{ book.year }}</li>
-        <li>Rating: {{ review.rating }}</li>
+        <li>Year: {{ book.year }}</li>
+        <li>Rated {{ average_rating }}/5 by {{ work_ratings_count }} people on Goodreads.</li>
     </ul>
 
     Review:
     <ul>
         {% for review in reviews %}
-            <li>{{ review }}</li>
+            <li>
+                <div>
+                    <p>{{ review.comment }}</p>
+                </div>
+            </li>
         {% else %}
             There is no review yet.
         {% endfor %}
     </ul>
 
     Your assessment:
-    <form>
-        <label for="rating">Rate: </label>
-        <input type="range" min="1" max="5" name="rating" id="rating">
-        <label for="review">Leave some comment:</label>
-        <textarea name="review" id="review"></textarea>
+    <form method="POST">
+        <div class="form-section">
+            <label for="rating">Rate: </label>
+            <input type="range" min="1" max="5" name="rating" id="rating">    
+        </div>
+        
+        <div class="form-section">
+            <textarea name="review" placeholder="Leave some comment"></textarea>
+        </div>
+
+        <div class="form-section">
+            <button>Submit</button>
+        </div>
     </form>
 {% endblock %}

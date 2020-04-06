@@ -5,15 +5,17 @@
 {% endblock %}
 
 {% block content %}
-    <form>
+    <h1>{{ title }}</h1>
+    <h2>{{ message }}</h2>
+    <form method="POST">
         <div class="form-section">
             <label for="username">Username: </label>
-            <input name="username" id="username" type="text">
+            <input name="username" id="username" type="text" required>
         </div>
 
         <div class="form-section">
             <label for="pass">Password: </label>
-            <input name="pass" id="pass" type="password">
+            <input name="pass" id="pass" type="password" required>
         </div>
 
         <div class="form-section">

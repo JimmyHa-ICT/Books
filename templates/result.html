@@ -8,10 +8,12 @@
     <ul>
         {% for book in books %}
             <li>
-                Title: {{book.title}}
-                Author: {{book.author}}
-                ISBN: {{book.isbn}}
-                Year: {{book.year}}
+                <a href="{{ url_for('book', isbn=book.isbn) }}">
+                    Title: {{book.title}}
+                    Author: {{book.author}}
+                    ISBN: {{book.isbn}}
+                    Year: {{book.year}}
+                </a>
             </li>
         {% else %}
             There were no results match with your keywords
