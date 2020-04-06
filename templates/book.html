@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ book.name }}
+{% endblock %}
+
+{% block content %}
+    <ul>
+        <li>Title: {{ book.title }}</li>
+        <li>Author: {{ book.author }}</li>
+        <li>ISBN: {{ book.isbn }}</li>
+        <li>Year:: {{ book.year }}</li>
+        <li>Rating: {{ review.rating }}</li>
+    </ul>
+
+    Review:
+    <ul>
+        {% for review in reviews %}
+            <li>{{ review }}</li>
+        {% else %}
+            There is no review yet.
+        {% endfor %}
+    </ul>
+
+    Your assessment:
+    <form>
+        <label for="rating">Rate: </label>
+        <input type="range" min="1" max="5" name="rating" id="rating">
+        <label for="review">Leave some comment:</label>
+        <textarea name="review" id="review"></textarea>
+    </form>
+{% endblock %}
