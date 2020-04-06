@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Sign up
+{% endblock %}
+
+{% block content %}
+    <form>
+        <div class="form-section">
+            <label for="username">Username: </label>
+            <input name="username" id="username" type="text">
+        </div>
+
+        <div class="form-section">
+            <label for="pass">Password: </label>
+            <input name="pass" id="pass" type="password">
+        </div>
+
+        <div class="form-section">
+            <button>Sign up</button>
+        </div>
+    </form>
+{% endblock %}
