@@ -1,24 +1,20 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Sign up
+    Login
 {% endblock %}
 
 {% block content %}
     <h1>{{ title }}</h1>
-    <h2>{{ message }}</h2>
     <form method="POST">
-        <div class="form-section">
+        <div class="form-group">
             <label for="username">Username: </label>
-            <input name="username" id="username" type="text" required>
-        </div>
-
-        <div class="form-section">
+            <input class="form-control" name="username" id="username" type="text" required>
             <label for="pass">Password: </label>
-            <input name="pass" id="pass" type="password" required>
+            <input class="form-control" name="pass" id="pass" type="password" required>
         </div>
 
-        <div class="form-section">
+        <div class="form-group">
             <button>{{ button }}</button>
         </div>
     </form>

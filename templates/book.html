@@ -18,6 +18,7 @@
         {% for review in reviews %}
             <li>
                 <div>
+                    <p>{{ review.username }} rated {{ review.rating}} score.</p>
                     <p>{{ review.comment }}</p>
                 </div>
             </li>
@@ -28,17 +29,21 @@
 
     Your assessment:
     <form method="POST">
-        <div class="form-section">
+        <div class="form-group">
             <label for="rating">Rate: </label>
-            <input type="range" min="1" max="5" name="rating" id="rating">    
+            <select name="rating" id="rating">
+                {% for i in range(5) %}
+                    <option value="{{ i+1 }}">{{ i }}</option>
+                {% endfor %}
+            </select>  
         </div>
         
-        <div class="form-section">
-            <textarea name="review" placeholder="Leave some comment"></textarea>
+        <div class="form-group">
+            <textarea name="review" class="form-control" placeholder="Leave some comment"></textarea>
         </div>
 
         <div class="form-section">
-            <button>Submit</button>
+            <button class="btn btn-primary">Submit</button>
         </div>
     </form>
 {% endblock %}

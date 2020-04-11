@@ -55,8 +55,7 @@ def signup():
         db.execute("INSERT INTO users (username, password) VALUES (:username, :password)",
                     {"username": username, "password": password})
         db.commit()
-        return redirect(url_for("login", button="Log in", title="Log In",
-                                message="Sign up successfully!"))
+        return redirect(url_for("login"))
 
 @app.route("/logout")
 def logout():
@@ -91,7 +90,7 @@ def book(isbn):
             db.execute("INSERT INTO ratings (rating, comment, book_id, user_id) VALUES (:rating, :comment, :book_id, :user_id)",
                         {"rating": rating, "comment": comment, "book_id": book.id, "user_id": user.id})
             db.commit()
-        reviews = db.execute("SELECT * FROM ratings WHERE book_id=:id", {"id": book.id}).fetchall()
+        reviews = db.execute("SELECT * FROM ratings JOIN users ON ratings.user_id=users.id WHERE ratings.book_id=:id", {"id": book.id}).fetchall()
         return render_template("book.html", book=book, average_rating=average_rating,
                                     work_ratings_count=work_ratings_count, reviews=reviews)
 

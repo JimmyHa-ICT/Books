@@ -5,18 +5,27 @@
 {% endblock %}
 
 {% block content %}
-    <ul>
-        {% for book in books %}
-            <li>
-                <a href="{{ url_for('book', isbn=book.isbn) }}">
-                    Title: {{book.title}}
-                    Author: {{book.author}}
-                    ISBN: {{book.isbn}}
-                    Year: {{book.year}}
-                </a>
-            </li>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>ISBN</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in books %}
+            <tr>
+                <td><a href="{{ url_for('book', isbn=book.isbn)  }}">{{ book.title }}</a></td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.year }}</td>
+                <td>{{ book.isbn }}</td>
+            </tr>
         {% else %}
-            There were no results match with your keywords
+            No matching results.
         {% endfor %}
-    </ul>
+        </tbody>
+
+    </table>
 {% endblock %}
