@@ -26,14 +26,14 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 def index():
     if "name" in session:
-        return render_template("index.html")
+        return render_template("index.html", username=session["name"])
     else:
         return redirect(url_for("login"))
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return render_template("login.html", button="Log in", title="Log In", message="")
+        return render_template("login.html")
     else:
         username = request.form.get("username")
         password = request.form.get("pass")
@@ -48,14 +48,21 @@ def login():
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "GET":
-        return render_template("login.html", button="Sign up", title="Sign up")
+        return render_template("auth.html")
     else:
         username = request.form.get("username")
         password = request.form.get("pass")
-        db.execute("INSERT INTO users (username, password) VALUES (:username, :password)",
-                    {"username": username, "password": password})
+        try:
+            db.execute("INSERT INTO users (username, password) VALUES (:username, :password)",
+                        {"username": username, "password": password})
+        except:
+                return render_template("notify.html", title="Error", message="The username already exists")
         db.commit()
-        return redirect(url_for("login"))
+        return render_template("notify.html", message="You have signed up successfully!", title="Sign up successfully!")
+
+@app.route("/error")
+def error(message):
+    return render_template("notify.html", title="Error", message=message)
 
 @app.route("/logout")
 def logout():
@@ -63,13 +70,17 @@ def logout():
     return redirect(url_for("login"))
 
 
-@app.route("/results", methods=["POST"])
+@app.route("/results", methods=["GET", "POST"])
 def result():
-    key = request.form.get("search")
-    key = '%' + key + '%'
-    books = db.execute("SELECT * FROM books WHERE (title LIKE :key) OR (author LIKE :key) OR (isbn LIKE :key)",
-                        {"key": key}).fetchall()
-    return render_template("result.html", books=books)
+    if request.method == "GET":
+        books = db.execute("SELECT * FROM books").fetchall()
+        return render_template("result.html", books=books, username=session["name"])
+    else:
+        key = request.form.get("search")
+        key = '%' + key.upper() + '%'
+        books = db.execute("SELECT * FROM books WHERE (Upper(title) LIKE :key) OR (Upper(author) LIKE :key) OR (isbn LIKE :key)",
+                            {"key": key}).fetchall()
+        return render_template("result.html", books=books, username=session["name"])
 
 @app.route("/book/<string:isbn>", methods=["GET", "POST"])
 def book(isbn):
@@ -84,15 +95,18 @@ def book(isbn):
         work_ratings_count = goodreads['books'][0]['work_ratings_count']
 
         if request.method == "POST":
-            rating = request.form.get("rating")
+            score = request.form.get("rating")
             comment = request.form.get("review")
-
-            db.execute("INSERT INTO ratings (rating, comment, book_id, user_id) VALUES (:rating, :comment, :book_id, :user_id)",
-                        {"rating": rating, "comment": comment, "book_id": book.id, "user_id": user.id})
+            
+            try:
+                db.execute("INSERT INTO ratings (score, comment, time, book_id, user_id) VALUES (:score, :comment, CURRENT_TIMESTAMP, :book_id, :user_id)",
+                            {"score": score, "comment": comment, "book_id": book.id, "user_id": user.id})
+            except  :
+                return render_template("notify.html", title="Error", message="You cannot comment two time")
             db.commit()
         reviews = db.execute("SELECT * FROM ratings JOIN users ON ratings.user_id=users.id WHERE ratings.book_id=:id", {"id": book.id}).fetchall()
         return render_template("book.html", book=book, average_rating=average_rating,
-                                    work_ratings_count=work_ratings_count, reviews=reviews)
+                                    work_ratings_count=work_ratings_count, reviews=reviews, username=session["name"])
 
 @app.route("/api/<string:isbn>")
 def api(isbn):
@@ -100,7 +114,7 @@ def api(isbn):
     if book is None:
         return jsonify({"error": "isbn is not match"})
     review_count = db.execute("SELECT COUNT(*) FROM ratings WHERE book_id = :id", {"id": book.id}).fetchone()
-    average_score = db.execute("SELECT AVG(rating) FROM ratings WHERE book_id = :id", {"id": book.id}).fetchone()
+    average_score = db.execute("SELECT AVG(score) FROM ratings WHERE book_id = :id", {"id": book.id}).fetchone()
     
     return jsonify({
         "title": book.title,

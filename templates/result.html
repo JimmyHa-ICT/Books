@@ -1,31 +1,38 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 
 {% block title %}
     Home
 {% endblock %}
 
 {% block content %}
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Year</th>
-                <th>ISBN</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for book in books %}
-            <tr>
-                <td><a href="{{ url_for('book', isbn=book.isbn)  }}">{{ book.title }}</a></td>
-                <td>{{ book.author }}</td>
-                <td>{{ book.year }}</td>
-                <td>{{ book.isbn }}</td>
-            </tr>
-        {% else %}
-            No matching results.
-        {% endfor %}
-        </tbody>
 
-    </table>
+    <section>
+        <p>Here is the result</p>
+    </section>
+    
+    <section>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Year</th>
+                    <th>ISBN</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td><a href="{{ url_for('book', isbn=book.isbn)  }}">{{ book.title }}</a></td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.year }}</td>
+                    <td>{{ book.isbn }}</td>
+                </tr>
+            {% else %}
+                No matching results.
+            {% endfor %}
+            </tbody>
+    
+        </table>
+    </section>
 {% endblock %}

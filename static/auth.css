@@ -1,0 +1,14 @@
+body {
+    background-image: url('background.jpg');
+    background-size: cover;
+}
+
+h1 {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-align: center;
+    color: white;
+}
+
+section {
+    margin: 20px;
+}

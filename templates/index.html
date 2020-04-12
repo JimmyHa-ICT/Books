@@ -1,19 +1,22 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 
 {% block title %}
     Home
 {% endblock %}
 
 {% block content %}
-    <form action="{{ url_for('result') }}" method="POST">
-        <div class="form-group">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" name="search" placeholder="Enter title, author or isbn of the book">
-                <div class="input-group-append">
-                  <button class="btn btn-primary">Search</button>
-                </div>
-              </div>
-        </div>
+    <section class="search">
+        <h1 style="margin-bottom: 20px;">Welcome to my CS50 project #1</h1>
         
-    </form>
+        <form action="{{ url_for('result') }}" method="POST">
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="search" placeholder="Enter title, author or isbn of the book">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary">Search</button>
+                    </div>
+                  </div>
+            </div>
+        </form>
+    </section>
 {% endblock %}

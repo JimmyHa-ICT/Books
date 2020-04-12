@@ -7,9 +7,12 @@
             {% endblock %}
         </title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        {% block css_link %} {% endblock %}
     </head>
 
     <body>
+      {% block nav %}
+      {% endblock %}
         <div class="container">
             {% block content %}
             {% endblock %}

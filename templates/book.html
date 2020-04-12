@@ -1,49 +1,58 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 
 {% block title %}
     {{ book.title }}
 {% endblock %}
 
 {% block content %}
-    <ul>
-        <li>Title: {{ book.title }}</li>
-        <li>Author: {{ book.author }}</li>
-        <li>ISBN: {{ book.isbn }}</li>
-        <li>Year: {{ book.year }}</li>
-        <li>Rated {{ average_rating }}/5 by {{ work_ratings_count }} people on Goodreads.</li>
-    </ul>
 
-    Review:
-    <ul>
-        {% for review in reviews %}
-            <li>
-                <div>
-                    <p>{{ review.username }} rated {{ review.rating}} score.</p>
-                    <p>{{ review.comment }}</p>
-                </div>
-            </li>
-        {% else %}
-            There is no review yet.
-        {% endfor %}
-    </ul>
+    <section class="card">
+        <ul>
+            <div class="data">
+                <li class="r"><span class="bold h">Title: </span><span class="c">{{ book.title }}</span></li>
+                <li class="r"><span class="bold h">Author: </span><span class="c">{{ book.author }}</span></li>
+                <li class="r"><span class="bold h">ISBN: </span><span class="c">{{ book.isbn }}</span></li>
+                <li class="r"><span class="bold h">Year: </span><span class="c">{{ book.year }}</span></li>
+            </div>
+            <li>Rated <span class="italic">{{ average_rating }}/5</span> by <span class="italic">{{ work_ratings_count }}</span> people on Goodreads.</li>
+        </ul>
+    </section>
 
-    Your assessment:
-    <form method="POST">
-        <div class="form-group">
-            <label for="rating">Rate: </label>
-            <select name="rating" id="rating">
-                {% for i in range(5) %}
-                    <option value="{{ i+1 }}">{{ i }}</option>
-                {% endfor %}
-            </select>  
-        </div>
-        
-        <div class="form-group">
-            <textarea name="review" class="form-control" placeholder="Leave some comment"></textarea>
-        </div>
+    <section class="card" style="padding: 10px;">
+        <p>
+            Review:
+        </p>
+        <ul>
+            {% for review in reviews %}
+                <li>
+                    <div class="comment">
+                        <p><span class="bold">{{ review.username }}</span> rated <span class="italic">{{ review.score}}</span> score at <span class="italic">{{ review.time.strftime("%B %d, %Y %H:%M")}}</span></p>
+                        <p>{{ review.comment }}</p>
+                    </div>
+                </li>
+            {% else %}
+                There is no review yet.
+            {% endfor %}
+        </ul>
+    </section>
+    
 
-        <div class="form-section">
-            <button class="btn btn-primary">Submit</button>
-        </div>
-    </form>
+    <section class="card" style="padding: 10px;">
+        <p>Your assessment:</p>
+        <form method="POST">
+            <div class="form-group">
+                <label for="rating">Rate: </label>
+                <select name="rating" id="rating">
+                    {% for i in range(5) %}
+                        <option value="{{ i+1 }}">{{ i+1 }}</option>
+                    {% endfor %}
+                </select>  
+                <textarea name="review" class="form-control" placeholder="Leave some comment"></textarea>
+            </div>
+    
+            <div class="form-section">
+                <button class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </section>
 {% endblock %}

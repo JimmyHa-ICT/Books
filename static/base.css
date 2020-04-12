@@ -1,0 +1,61 @@
+body {
+    background-image: url('background2.jpg');
+    background-size: cover;
+}
+
+.container {
+    padding-top: 10px;
+}
+
+.search {
+    position: fixed;
+    left: 15%;
+    right: 15%;
+    top: 35%;
+    width: -moz-available;
+}
+
+section {
+    margin: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: white;
+}
+
+ul {
+    list-style-type: none;
+    margin-top: 10px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+    font-weight: 100;
+}
+
+.data {
+    display: table;
+}
+
+.r {
+    display: table-row;
+}
+
+.h {
+    display: table-cell;
+    padding-right: 10rem;
+}
+
+.c {
+    vertical-align: bottom;
+    display: table-cell;
+}
+
+.comment {
+    border-top: gainsboro 1px dashed;
+}
