@@ -40,8 +40,8 @@ def login():
         user = db.execute("SELECT * FROM users WHERE username=:username AND password=:password",
                              {"username": username, "password": password}).fetchone()
         if user is None:
-            return render_template("login.html", button="Log in", title="Log In",
-                                 message="Username or password is not correct. Please try again!")
+            return render_template("login.html",
+                                 message='Username or password is not correct. Please try again!', message_type="alert-danger")
         session["name"] = username
         return redirect(url_for("index"))
 
@@ -56,13 +56,10 @@ def signup():
             db.execute("INSERT INTO users (username, password) VALUES (:username, :password)",
                         {"username": username, "password": password})
         except:
-                return render_template("notify.html", title="Error", message="The username already exists")
+                return render_template("auth.html", message='This username already exists', message_type="alert-danger")
         db.commit()
-        return render_template("notify.html", message="You have signed up successfully!", title="Sign up successfully!")
+        return render_template("auth.html", message="You have signed up successfully!", message_type="alert-success")
 
-@app.route("/error")
-def error(message):
-    return render_template("notify.html", title="Error", message=message)
 
 @app.route("/logout")
 def logout():
@@ -88,22 +85,41 @@ def book(isbn):
         book = db.execute("SELECT * FROM books WHERE isbn=:isbn", {"isbn": isbn}).fetchone()
         user = db.execute("SELECT * FROM users WHERE username=:name",
                             {"name": session["name"]}).fetchone()
+        
+        
+        # Request to goodreads
+
         res = requests.get("https://www.goodreads.com/book/review_counts.json",
                             params={"key": "1TS2UgcLliaACF7PlaM0HQ", "isbns": isbn})
         goodreads = res.json()
         average_rating = goodreads['books'][0]['average_rating']
         work_ratings_count = goodreads['books'][0]['work_ratings_count']
 
+        ######################
+
+        # Handle new comment        
         if request.method == "POST":
-            score = request.form.get("rating")
-            comment = request.form.get("review")
+            # Checking if the user has commented before or not
+            check = db.execute("SELECT COUNT(*) FROM ratings JOIN users ON ratings.user_id=users.id WHERE ratings.book_id=:id AND users.username=:name", {"id": book.id, "name": session["name"]}).fetchone()
             
-            try:
+            # If not then add new comment
+            if check.count == 0:
+                score = request.form.get("rating")
+                comment = request.form.get("review")
+                reviews = db.execute("SELECT * FROM ratings JOIN users ON ratings.user_id=users.id WHERE ratings.book_id=:id", {"id": book.id}).fetchall()
                 db.execute("INSERT INTO ratings (score, comment, time, book_id, user_id) VALUES (:score, :comment, CURRENT_TIMESTAMP, :book_id, :user_id)",
                             {"score": score, "comment": comment, "book_id": book.id, "user_id": user.id})
-            except  :
-                return render_template("notify.html", title="Error", message="You cannot comment two time")
-            db.commit()
+                db.commit()
+            
+            # Else return a warning message
+            else:
+                reviews = db.execute("SELECT * FROM ratings JOIN users ON ratings.user_id=users.id WHERE ratings.book_id=:id", {"id": book.id}).fetchall()
+                return render_template("book.html", book=book, average_rating=average_rating,
+                                    work_ratings_count=work_ratings_count, reviews=reviews,
+                                    username=session["name"], message="You cannot comment two time")
+            
+        #########################################
+
         reviews = db.execute("SELECT * FROM ratings JOIN users ON ratings.user_id=users.id WHERE ratings.book_id=:id", {"id": book.id}).fetchall()
         return render_template("book.html", book=book, average_rating=average_rating,
                                     work_ratings_count=work_ratings_count, reviews=reviews, username=session["name"])
@@ -112,7 +128,7 @@ def book(isbn):
 def api(isbn):
     book = db.execute("SELECT * FROM books WHERE isbn = :isbn", {"isbn": isbn}).fetchone()
     if book is None:
-        return jsonify({"error": "isbn is not match"})
+        return jsonify({"error": "isbn is not match"}), 404
     review_count = db.execute("SELECT COUNT(*) FROM ratings WHERE book_id = :id", {"id": book.id}).fetchone()
     average_score = db.execute("SELECT AVG(score) FROM ratings WHERE book_id = :id", {"id": book.id}).fetchone()
     

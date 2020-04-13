@@ -39,6 +39,13 @@
 
     <section class="card" style="padding: 10px;">
         <p>Your assessment:</p>
+
+        {% if message %}
+            <div class="alert alert-danger" role="alert">
+                {{ message }}
+            </div>
+        {% endif %}
+        
         <form method="POST">
             <div class="form-group">
                 <label for="rating">Rate: </label>

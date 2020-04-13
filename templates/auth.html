@@ -19,6 +19,13 @@
         <h1>Create an account</h1>
         <div class="card">
             <div class="card-body" style="padding: 10px; width: auto">
+
+                {% if message %}
+                <div class="alert {{message_type}}" role="alert" style="font-size: 0.85em;">
+                    {{ message }}
+                </div>
+                {% endif %}
+
                 <form method="POST">
                     <div class="form-group">
                         <label for="username">Username: </label>
@@ -34,9 +41,6 @@
                         <button class="btn btn-primary float-center">Sign up</button>
                     </div>
                 </form>
-                {% block message %}
-                {% endblock %}
-
             </div>
         </div>    
     </section>    

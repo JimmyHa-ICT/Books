@@ -24,4 +24,4 @@ class Rating(db.Model):
     comment = db.Column(db.String)
     time = db.Column(db.DateTime)
     book_id = db.Column(db.Integer, db.ForeignKey("books.id"), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, unique=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
